@@ -1,0 +1,32 @@
+version: '3.9'
+services:
+  server:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: go-api-server
+    ports:
+      - "8080:8080"
+      - "40000:40000"
+    volumes:
+      - .:/app
+    depends_on:
+      - db
+    security_opt:
+      - apparmor:unconfined
+    cap_add:
+      - SYS_PTRACE
+
+  db:
+    image: mysql:5.7.22
+    container_name: mysql-db
+    restart: always
+    environment:
+      MYSQL_DATABASE: develop
+      MYSQL_USER: root
+      MYSQL_PASSWORD: root
+      MYSQL_ROOT_PASSWORD: root
+    volumes:
+      - .dbdata:/var/lib/mysql
+    ports:
+      - "33066:3306"
