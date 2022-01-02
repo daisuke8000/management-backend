@@ -16,7 +16,7 @@ func Setup(app *gin.Engine) {
 	{
 		ambassador.GET("/signup", func(c *gin.Context) {
 			c.JSON(200, gin.H{
-				"message": "ambassador signup6",
+				"message": "ambassador signup7",
 			})
 		})
 	}
