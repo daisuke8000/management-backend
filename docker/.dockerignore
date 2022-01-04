@@ -1,0 +1,10 @@
+### Example user template template
+### Example user template
+
+# IntelliJ project files
+**/.idea
+**/.dbdata
+**/development
+**/production
+**/docker-compose*
+**/.gitignore
