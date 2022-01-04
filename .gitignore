@@ -8,3 +8,4 @@ out
 gen
 # Mysql db data
 .dbdata
+tmp
