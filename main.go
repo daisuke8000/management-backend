@@ -5,6 +5,7 @@ import (
 	"github.com/daisuke8000/server/src/routes"
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
+	"time"
 )
 
 func main() {
@@ -13,12 +14,14 @@ func main() {
 	app := gin.Default()
 	app.Use(cors.New(cors.Config{
 		AllowOrigins: []string{"*"},
-		//AllowMethods:     []string{"GET", "POST", "HEAD", "PUT", "DELETE", "PATCH"},
-		//AllowHeaders:     []string{"Origin"},
+		AllowMethods: []string{"GET", "POST", "HEAD", "PUT", "DELETE", "PATCH"},
+		AllowHeaders: []string{
+			"Content-Type",
+		},
 		//ExposeHeaders:    []string{"Content-Length"},
-		AllowCredentials: true,
+		//AllowCredentials: false,
 		//AllowOriginFunc:  nil,
-		//MaxAge:           12 * time.Hour,
+		MaxAge: 12 * time.Hour,
 	}))
 	routes.Setup(app)
 	// listen and serve on 0.0.0.0:8080 (for windows "localhost:8080")
