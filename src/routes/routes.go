@@ -10,6 +10,7 @@ func Setup(app *gin.Engine) {
 	admin := api.Group("/admin")
 	{
 		admin.POST("/signup", controllers.Signup)
+		admin.POST("/signin", controllers.Signin)
 
 	}
 	ambassador := api.Group("/ambassador")
