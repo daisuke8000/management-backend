@@ -11,8 +11,9 @@ func Setup(app *gin.Engine) {
 	{
 		admin.POST("/signup", controllers.Signup)
 		admin.POST("/signin", controllers.Signin)
-
+		//adminAuthorization := admin.Use(middleware.IsAuthorization)
 	}
+
 	ambassador := api.Group("/ambassador")
 	{
 		ambassador.GET("/signup", func(c *gin.Context) {

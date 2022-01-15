@@ -15,7 +15,7 @@ func main() {
 	database.AutoMigrate()
 	app := gin.Default()
 	store := cookie.NewStore([]byte("secret"))
-	app.Use(sessions.Sessions("cookie", store))
+	app.Use(sessions.Sessions("user_jwt", store))
 	app.Use(cors.New(cors.Config{
 		AllowOrigins: []string{"http://localhost:3007"},
 		AllowMethods: []string{"GET", "POST", "HEAD", "PUT", "DELETE", "PATCH"},
