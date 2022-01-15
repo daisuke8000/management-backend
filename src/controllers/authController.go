@@ -5,8 +5,11 @@ import (
 	"github.com/daisuke8000/server/src/models"
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
+	"github.com/golang-jwt/jwt"
 	"net/http"
+	"strconv"
 	"strings"
+	"time"
 )
 
 func Signup(c *gin.Context) {
@@ -64,32 +67,30 @@ func Signin(c *gin.Context) {
 		return
 	}
 
-	//payload := jwt.RegisteredClaims{
-	//	Issuer: "develop",
-	//	ExpiresAt: jwt.NewNumericDate(
-	//		time.Unix(time.Now().Unix(), 0)),
-	//}
-	//
-	//token, err := jwt.NewWithClaims(jwt.SigningMethodHS256, payload).SignedString([]byte("secret"))
-	//if err != nil {
-	//	c.JSON(http.StatusBadRequest, gin.H{
-	//		"message": "Invalid Credentials",
-	//	})
-	//	return
-	//}
-	//
-	//c.SetSameSite(http.SameSiteNoneMode)
-	//c.SetCookie(
-	//	"jwt",
-	//	token,
-	//	3600,
-	//	"/",
-	//	"localhost",
-	//	false,
-	//	true,
-	//)
+	payload := jwt.StandardClaims{
+		Subject:   strconv.Itoa(int(user.Id)),
+		ExpiresAt: time.Now().Add(time.Hour * 24).Unix(),
+	}
 
-	session.Set("loginUser", c.PostForm("userId"))
+	token, err := jwt.NewWithClaims(jwt.SigningMethodHS256, payload).SignedString([]byte("secret"))
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"message": "Invalid Credentials",
+		})
+		return
+	}
+
+	c.SetSameSite(http.SameSiteNoneMode)
+	c.SetCookie(
+		"jwt",
+		token,
+		3600,
+		"/",
+		"localhost",
+		false,
+		true,
+	)
+	session.Set(strconv.Itoa(int(user.Id)), token)
 	session.Save()
 
 	c.JSON(http.StatusOK, gin.H{
