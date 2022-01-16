@@ -2,6 +2,7 @@ package routes
 
 import (
 	"github.com/daisuke8000/server/src/controllers"
+	"github.com/daisuke8000/server/src/middleware"
 	"github.com/gin-gonic/gin"
 )
 
@@ -11,7 +12,9 @@ func Setup(app *gin.Engine) {
 	{
 		admin.POST("/signup", controllers.Signup)
 		admin.POST("/signin", controllers.Signin)
-		//adminAuthorization := admin.Use(middleware.IsAuthorization)
+		adminAuthorization := admin.Use(middleware.IsAuthorization)
+		adminAuthorization.GET("/user", controllers.User)
+		adminAuthorization.POST("/signout", controllers.Logout)
 	}
 
 	ambassador := api.Group("/ambassador")
