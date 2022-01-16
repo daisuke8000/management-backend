@@ -2,8 +2,8 @@ package controllers
 
 import (
 	"github.com/daisuke8000/server/src/database"
+	"github.com/daisuke8000/server/src/middleware"
 	"github.com/daisuke8000/server/src/models"
-	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
 	"github.com/golang-jwt/jwt"
 	"net/http"
@@ -43,7 +43,6 @@ func Signup(c *gin.Context) {
 
 func Signin(c *gin.Context) {
 	var data map[string]string
-	session := sessions.Default(c)
 	if err := c.ShouldBindJSON(&data); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"error": err.Error(),
@@ -80,18 +79,27 @@ func Signin(c *gin.Context) {
 		return
 	}
 
-	c.SetSameSite(http.SameSiteNoneMode)
+	securedtype := false
+	if host := c.Request.Host; string(host) == "localhost:8080" {
+		//develop environment
+		c.SetSameSite(http.SameSiteStrictMode)
+	} else {
+		//poduction environment
+		c.SetSameSite(http.SameSiteNoneMode)
+		securedtype = !securedtype
+	}
+	
 	c.SetCookie(
 		"jwt",
 		token,
 		3600,
 		"/",
 		"localhost",
-		false,
+		//develop environment >> secure: false
+		//production environment >> secure: true
+		securedtype,
 		true,
 	)
-	session.Set(strconv.Itoa(int(user.Id)), token)
-	session.Save()
 
 	c.JSON(http.StatusOK, gin.H{
 		"message": "success",
@@ -100,23 +108,12 @@ func Signin(c *gin.Context) {
 }
 
 func User(c *gin.Context) {
-	cookie, _ := c.Cookie("jwt")
-	token, err := jwt.ParseWithClaims(cookie, &jwt.StandardClaims{}, func(token *jwt.Token) (interface{}, error) {
-		return []byte("secret"), nil
-	})
 
-	if err != nil || !token.Valid {
-		c.JSON(http.StatusUnauthorized, gin.H{
-			"message": "unauthorized",
-		})
-		return
-	}
-
-	payload := token.Claims.(*jwt.StandardClaims)
+	id, _ := middleware.GetUserId(c)
 
 	var user models.User
 
-	database.DB.Where("id = ?", payload.Subject).First(&user)
+	database.DB.Where("id = ?", id).First(&user)
 
 	c.JSON(http.StatusOK, user)
 
@@ -124,18 +121,15 @@ func User(c *gin.Context) {
 }
 
 func Logout(c *gin.Context) {
-	session := sessions.Default(c)
 	c.SetCookie(
 		"jwt",
 		"",
 		-3600,
 		"/",
 		"localhost",
-		false,
+		true,
 		true,
 	)
-	session.Clear()
-	session.Save()
 	c.JSON(http.StatusOK, gin.H{
 		"message": "success Signout",
 	})
