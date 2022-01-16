@@ -11,6 +11,8 @@ func Setup(app *gin.Engine) {
 	{
 		admin.POST("/signup", controllers.Signup)
 		admin.POST("/signin", controllers.Signin)
+		admin.GET("/user", controllers.User)
+		admin.POST("/signout", controllers.Logout)
 		//adminAuthorization := admin.Use(middleware.IsAuthorization)
 	}
 

@@ -98,3 +98,46 @@ func Signin(c *gin.Context) {
 	})
 	return
 }
+
+func User(c *gin.Context) {
+	cookie, _ := c.Cookie("jwt")
+	token, err := jwt.ParseWithClaims(cookie, &jwt.StandardClaims{}, func(token *jwt.Token) (interface{}, error) {
+		return []byte("secret"), nil
+	})
+
+	if err != nil || !token.Valid {
+		c.JSON(http.StatusUnauthorized, gin.H{
+			"message": "unauthorized",
+		})
+		return
+	}
+
+	payload := token.Claims.(*jwt.StandardClaims)
+
+	var user models.User
+
+	database.DB.Where("id = ?", payload.Subject).First(&user)
+
+	c.JSON(http.StatusOK, user)
+
+	return
+}
+
+func Logout(c *gin.Context) {
+	session := sessions.Default(c)
+	c.SetCookie(
+		"jwt",
+		"",
+		-3600,
+		"/",
+		"localhost",
+		false,
+		true,
+	)
+	session.Clear()
+	session.Save()
+	c.JSON(http.StatusOK, gin.H{
+		"message": "success Signout",
+	})
+	return
+}
