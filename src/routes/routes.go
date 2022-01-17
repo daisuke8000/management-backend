@@ -15,6 +15,8 @@ func Setup(app *gin.Engine) {
 		adminAuthorization := admin.Use(middleware.IsAuthorization)
 		adminAuthorization.GET("/user", controllers.User)
 		adminAuthorization.POST("/signout", controllers.Logout)
+		adminAuthorization.PUT("/users/update", controllers.UpdateInfo)
+		adminAuthorization.PUT("/users/password", controllers.UpdatePassword)
 	}
 
 	ambassador := api.Group("/ambassador")

@@ -88,7 +88,6 @@ func Signin(c *gin.Context) {
 		c.SetSameSite(http.SameSiteNoneMode)
 		securedtype = !securedtype
 	}
-	
 	c.SetCookie(
 		"jwt",
 		token,
@@ -133,5 +132,64 @@ func Logout(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{
 		"message": "success Signout",
 	})
+	return
+}
+
+func UpdateInfo(c *gin.Context) {
+	var data map[string]string
+	if err := c.ShouldBindJSON(&data); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": err.Error(),
+		})
+		return
+	}
+
+	id, _ := middleware.GetUserId(c)
+	user := models.User{
+		Id:    id,
+		Name:  data["name"],
+		Email: data["email"],
+	}
+
+	database.DB.Model(&user).Updates(&user)
+
+	c.JSON(http.StatusOK, gin.H{
+		"user": user,
+	})
+
+	return
+}
+
+func UpdatePassword(c *gin.Context) {
+	var data map[string]string
+	if err := c.ShouldBindJSON(&data); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": err.Error(),
+		})
+	}
+
+	if data["password"] != data["password_confirm"] {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"message": "password do not match",
+		})
+		return
+	}
+
+	id, _ := middleware.GetUserId(c)
+
+	user := models.User{
+		Id: id,
+	}
+
+	database.DB.Where("id = ?", id).First(&user)
+
+	user.SetPassword(data["password"])
+
+	database.DB.Model(&user).Updates(&user)
+
+	c.JSON(http.StatusOK, gin.H{
+		"user": user,
+	})
+
 	return
 }
