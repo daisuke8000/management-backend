@@ -17,8 +17,8 @@ func Setup(app *gin.Engine) {
 		adminAuthorization.POST("/signout", controllers.Logout)
 		adminAuthorization.PUT("/users/update", controllers.UpdateInfo)
 		adminAuthorization.PUT("/users/password", controllers.UpdatePassword)
+		adminAuthorization.GET("/ambassadors", controllers.Ambassadors)
 	}
-
 	ambassador := api.Group("/ambassador")
 	{
 		ambassador.GET("/signup", func(c *gin.Context) {
