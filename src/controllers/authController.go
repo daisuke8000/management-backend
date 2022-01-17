@@ -181,14 +181,12 @@ func UpdatePassword(c *gin.Context) {
 		Id: id,
 	}
 
-	database.DB.Where("id = ?", id).First(&user)
-
 	user.SetPassword(data["password"])
 
 	database.DB.Model(&user).Updates(&user)
 
 	c.JSON(http.StatusOK, gin.H{
-		"user": user,
+		"message": "password updated successfully",
 	})
 
 	return
