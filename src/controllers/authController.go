@@ -119,7 +119,7 @@ func User(c *gin.Context) {
 	return
 }
 
-func Logout(c *gin.Context) {
+func Signout(c *gin.Context) {
 	c.SetCookie(
 		"jwt",
 		"",

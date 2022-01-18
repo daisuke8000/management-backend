@@ -14,17 +14,22 @@ func Setup(app *gin.Engine) {
 		admin.POST("/signin", controllers.Signin)
 		adminAuthorization := admin.Use(middleware.IsAuthorization)
 		adminAuthorization.GET("/user", controllers.User)
-		adminAuthorization.POST("/signout", controllers.Logout)
+		adminAuthorization.POST("/signout", controllers.Signout)
 		adminAuthorization.PUT("/users/update", controllers.UpdateInfo)
 		adminAuthorization.PUT("/users/password", controllers.UpdatePassword)
 		adminAuthorization.GET("/ambassadors", controllers.Ambassadors)
 	}
 	ambassador := api.Group("/ambassador")
 	{
-		ambassador.GET("/signup", func(c *gin.Context) {
-			c.JSON(200, gin.H{
-				"message": "ambassador signup8",
-			})
-		})
+		ambassador.POST("/signup", controllers.Signup)
+		ambassador.POST("/signin", controllers.Signin)
+		ambassadorAuthorization := ambassador.Use(middleware.IsAuthorization)
+		ambassadorAuthorization.GET("/user", controllers.User)
+		ambassadorAuthorization.POST("/signout", controllers.Signout)
+		ambassadorAuthorization.PUT("/users/update", controllers.UpdateInfo)
+		ambassadorAuthorization.PUT("/users/password", controllers.UpdatePassword)
+		ambassadorAuthorization.GET("/users/point")
+		ambassadorAuthorization.GET("/users/score")
+		ambassadorAuthorization.GET("/users/history")
 	}
 }
