@@ -6,8 +6,6 @@ type User struct {
 	Id       uint   `json:"id"`
 	Name     string `json:"name"`
 	Email    string `json:"email"`
-	Point    int    `json:"point"`
-	Rank     int    `json:"rank"`
 	Password []byte `json:"-"`
 	IsAdmin  bool   `json:"-"`
 }
