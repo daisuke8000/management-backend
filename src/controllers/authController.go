@@ -146,10 +146,11 @@ func UpdateInfo(c *gin.Context) {
 
 	id, _ := middleware.GetUserId(c)
 	user := models.User{
-		Id:    id,
 		Name:  data["name"],
 		Email: data["email"],
 	}
+
+	user.Id = id
 
 	database.DB.Model(&user).Updates(&user)
 
@@ -177,9 +178,9 @@ func UpdatePassword(c *gin.Context) {
 
 	id, _ := middleware.GetUserId(c)
 
-	user := models.User{
-		Id: id,
-	}
+	user := models.User{}
+
+	user.Id = id
 
 	user.SetPassword(data["password"])
 

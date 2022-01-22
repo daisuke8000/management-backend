@@ -17,5 +17,5 @@ func Connect() {
 }
 
 func AutoMigrate() {
-	DB.AutoMigrate(models.User{}, models.History{}, models.MatchHistory{})
+	DB.AutoMigrate(models.User{}, models.History{}, models.Match{})
 }

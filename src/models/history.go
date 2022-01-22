@@ -1,19 +1,10 @@
 package models
 
-import "time"
-
 type History struct {
-	HistoryId uint      `json:"history_id"`
-	Created   time.Time `json:"created"`
-	Updated   time.Time `json:"updated"`
-	Point     int       `json:"point"`
-	Rank      int       `json:"rank"`
-	//UserId       User         `json:"user_id" gorm:"foreignKey:UserId"`
-	//MatchHistory MatchHistory `json:"match_history" gorm:"foreignKey:MatchHistoryId"`
-}
-
-type MatchHistory struct {
-	MatchHistoryId uint      `json:"match_history_id"`
-	Created        time.Time `json:"created"`
-	Updated        time.Time `json:"updated"`
+	Model
+	TotalPoint int     `json:"total_point"`
+	TotalRank  int     `json:"total_rank"`
+	UserId     uint    `json:"user_id"`
+	User       User    `json:"user" gorm:"foreignKey:UserId"`
+	Matches    []Match `json:"matches,omitempty" gorm:"many2many:history_matches"`
 }
