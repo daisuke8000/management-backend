@@ -4,8 +4,8 @@ import "golang.org/x/crypto/bcrypt"
 
 type User struct {
 	Model
-	Name     string `json:"name"`
-	Email    string `json:"email"`
+	Name     string `json:"name" gorm:"unique"`
+	Email    string `json:"email" gorm:"unique"`
 	Password []byte `json:"-"`
 	IsAdmin  bool   `json:"-"`
 }

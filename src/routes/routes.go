@@ -26,10 +26,14 @@ func Setup(app *gin.Engine) {
 		ambassadorAuthorization := ambassador.Use(middleware.IsAuthorization)
 		ambassadorAuthorization.GET("/user", controllers.User)
 		ambassadorAuthorization.POST("/signout", controllers.Signout)
-		ambassadorAuthorization.GET("/histories", controllers.Histories)
-		ambassadorAuthorization.POST("/history", controllers.CreateHistory)
-		ambassadorAuthorization.GET("/history/:id", controllers.GetHistory)
-		ambassadorAuthorization.PUT("/history/:id", controllers.UpdateHistory)
+		ambassadorAuthorization.GET("/matches", controllers.Matches)
+		ambassadorAuthorization.POST("/match", controllers.CreateMatch)
+		// matchId
+		ambassadorAuthorization.GET("/match/:id", controllers.GetMatch)
+		ambassadorAuthorization.PUT("/match/:id", controllers.UpdateMatch)
+		ambassadorAuthorization.GET("/users/histories", controllers.AllHistories)
+		// matchHistoryId
+		ambassadorAuthorization.GET("/users/history/:id", controllers.UserHistories)
 		ambassadorAuthorization.PUT("/users/update", controllers.UpdateInfo)
 		ambassadorAuthorization.PUT("/users/password", controllers.UpdatePassword)
 		ambassadorAuthorization.GET("/users/point")
