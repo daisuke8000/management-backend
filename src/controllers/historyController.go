@@ -18,7 +18,7 @@ func AllHistories(c *gin.Context) {
 	return
 }
 
-func UserHistories(c *gin.Context) {
+func GetPoints(c *gin.Context) {
 	id, _ := strconv.Atoi(c.Param("id"))
 
 	var histories []models.History

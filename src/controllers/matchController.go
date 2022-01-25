@@ -11,7 +11,13 @@ import (
 func Matches(c *gin.Context) {
 	var matches []models.Match
 
+	id, _ := strconv.Atoi(c.Param("id"))
+
 	database.DB.Find(&matches)
+
+	database.DB.Where(
+		"match_user_id_01 = ?", id).Or("or match_user_id_02 = ?", id).Or(
+		"match_user_id_03 = ?", id).Or("match_user_id_04 = ?", id).Find(&matches)
 
 	c.JSON(http.StatusOK, matches)
 
