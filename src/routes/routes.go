@@ -24,19 +24,19 @@ func Setup(app *gin.Engine) {
 		ambassador.POST("/signup", controllers.Signup)
 		ambassador.POST("/signin", controllers.Signin)
 		ambassadorAuthorization := ambassador.Use(middleware.IsAuthorization)
-		ambassadorAuthorization.GET("/user", controllers.User)
+		ambassadorAuthorization.GET("/users", controllers.User)
 		ambassadorAuthorization.POST("/signout", controllers.Signout)
-		ambassadorAuthorization.GET("/matches", controllers.Matches)
-		ambassadorAuthorization.POST("/match", controllers.CreateMatch)
-		// matchId
-		ambassadorAuthorization.GET("/match/:id", controllers.GetMatch)
-		ambassadorAuthorization.PUT("/match/:id", controllers.UpdateMatch)
-		ambassadorAuthorization.GET("/users/histories", controllers.AllHistories)
-		// matchHistoryId
-		ambassadorAuthorization.GET("/users/history/:id", controllers.UserHistories)
 		ambassadorAuthorization.PUT("/users/update", controllers.UpdateInfo)
 		ambassadorAuthorization.PUT("/users/password", controllers.UpdatePassword)
-		ambassadorAuthorization.GET("/users/point")
+		// history
+		ambassadorAuthorization.GET("/histories", controllers.AllHistories)
+		// matchId
+		ambassadorAuthorization.GET("/users/matches", controllers.Matches)
+		ambassadorAuthorization.POST("/users/match", controllers.CreateMatch)
+		ambassadorAuthorization.GET("/users/match/:id", controllers.GetMatch)
+		ambassadorAuthorization.PUT("/users/match/:id", controllers.UpdateMatch)
+		// matchHistoryId
+		ambassadorAuthorization.GET("/users/point", controllers.UserHistories)
 		ambassadorAuthorization.GET("/users/score")
 	}
 }
