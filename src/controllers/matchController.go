@@ -9,6 +9,7 @@ import (
 )
 
 func Matches(c *gin.Context) {
+
 	var matches []models.Match
 
 	id, _ := strconv.Atoi(c.Param("id"))
@@ -16,8 +17,10 @@ func Matches(c *gin.Context) {
 	database.DB.Find(&matches)
 
 	database.DB.Where(
-		"match_user_id_01 = ?", id).Or("or match_user_id_02 = ?", id).Or(
-		"match_user_id_03 = ?", id).Or("match_user_id_04 = ?", id).Find(&matches)
+		"match_user01_id = ?", id).Or(
+		"match_user02_id = ?", id).Or(
+		"match_user03_id = ?", id).Or(
+		"match_user04_id = ?", id).Find(&matches)
 
 	c.JSON(http.StatusOK, matches)
 
@@ -40,7 +43,7 @@ func CreateMatch(c *gin.Context) {
 
 	Ids, Points, Ranks := match.CreateHistory()
 
-	for i := 0; i <= 4; {
+	for i := 0; i <= 3; {
 		history := models.History{
 			Point:  Points[i],
 			Rank:   Ranks[i],
