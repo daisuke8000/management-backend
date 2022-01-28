@@ -4,10 +4,10 @@
 An application to record your mahjong game results.
 Get rankings, points, and scores from the entire, own match history, and provide endpoints.
 
-### backend API Server
+## backend API Server
 cooming soon
 
-### relation groups
+## relation groups
 https://github.com/daisuke8000/frontend-next-ts
 
 ## develop
