@@ -13,7 +13,6 @@ func main() {
 			Name:    faker.Name(),
 			Email:   faker.Email(),
 			IsAdmin: false,
-			//HistoryId: uint(i),
 		}
 		ambassador.SetPassword("9999")
 		database.DB.Create(&ambassador)

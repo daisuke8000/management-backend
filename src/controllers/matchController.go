@@ -17,10 +17,10 @@ func Matches(c *gin.Context) {
 	database.DB.Find(&matches)
 
 	database.DB.Where(
-		"match_user01_id = ?", id).Or(
-		"match_user02_id = ?", id).Or(
-		"match_user03_id = ?", id).Or(
-		"match_user04_id = ?", id).Find(&matches)
+		"match_user_id01 = ?", id).Or(
+		"match_user_id02 = ?", id).Or(
+		"match_user_id03 = ?", id).Or(
+		"match_user_id04 = ?", id).Find(&matches)
 
 	c.JSON(http.StatusOK, matches)
 
@@ -41,16 +41,15 @@ func CreateMatch(c *gin.Context) {
 
 	c.JSON(http.StatusOK, match)
 
-	Ids, Points, Ranks := match.CreateHistory()
+	Ids, Scores, Ranks := match.CreateMatchParameters()
 
 	for i := 0; i <= 3; {
-		history := models.History{
-			Point:  Points[i],
-			Rank:   Ranks[i],
-			UserId: uint(Ids[i]),
-			Match:  match,
-		}
+		var history models.History
+		history.CreateHistory(Scores[i], Ranks[i], uint(Ids[i]), match.Id)
 		database.DB.Create(&history)
+
+		//var grade models.Grade
+		//grade.UpdateGrade(&history)
 		i++
 	}
 
