@@ -10,27 +10,27 @@ func main() {
 	database.Connect()
 	for i := 0; i < 100; i++ {
 		match := models.Match{
-			MatchUser01Id:    rand.Intn(100) + 1,
-			MatchUser01Point: rand.Intn(50000-40000) + 40000,
-			MatchUser01Rank:  1,
-			MatchUser02Id:    rand.Intn(100) + 1,
-			MatchUser02Point: rand.Intn(40000-30000) + 30000,
-			MatchUser02Rank:  2,
-			MatchUser03Id:    rand.Intn(100) + 1,
-			MatchUser03Point: rand.Intn(20000-10000) + 10000,
-			MatchUser03Rank:  3,
-			MatchUser04Id:    rand.Intn(100) + 1,
-			MatchUser04Point: rand.Intn(15000-5000) + 5000,
-			MatchUser04Rank:  4,
+			MatchUserId01:    rand.Intn(100) + 1,
+			MatchUserScore01: rand.Intn(50000-40000) + 40000,
+			MatchUserRank01:  1,
+			MatchUserId02:    rand.Intn(100) + 1,
+			MatchUserScore02: rand.Intn(40000-30000) + 30000,
+			MatchUserRank02:  2,
+			MatchUserId03:    rand.Intn(100) + 1,
+			MatchUserScore03: rand.Intn(20000-10000) + 10000,
+			MatchUserRank03:  3,
+			MatchUserId04:    rand.Intn(100) + 1,
+			MatchUserScore04: rand.Intn(15000-5000) + 5000,
+			MatchUserRank04:  4,
 		}
 
 		database.DB.Create(&match)
 
-		Ids, Points, Ranks := match.CreateHistory()
+		Ids, Scores, Ranks := match.CreateMatchParameters()
 
 		for v := 0; v <= 3; {
 			history := models.History{
-				Point:  Points[v],
+				Score:  Scores[v],
 				Rank:   Ranks[v],
 				UserId: uint(Ids[v]),
 				Match:  match,
