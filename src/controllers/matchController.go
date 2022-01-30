@@ -8,6 +8,70 @@ import (
 	"strconv"
 )
 
+func MaxScoreCalc(history *models.History) int {
+	var maxScore int64
+	database.DB.Model(&history).Select("max(score)").Where("user_id = ?", history.UserId).Find(&maxScore)
+	return int(maxScore)
+}
+
+func AverageScoreCalc(history *models.History) float64 {
+	var averageScore float64
+	database.DB.Model(&history).Select("avg(score)").Where("user_id = ?", history.UserId).Find(&averageScore)
+	return averageScore
+}
+
+func CountNumberOfTopCalc(history *models.History) int {
+	var numberOfTopCount int64
+	database.DB.Model(&history).Where(
+		"rank = ? AND user_id = ?", 1, history.UserId).Count(&numberOfTopCount)
+	return int(numberOfTopCount)
+}
+
+func CountNumberOfSecondsCalc(history *models.History) int {
+	var numberOfSecondsCount int64
+	database.DB.Model(&history).Where(
+		"rank = ? AND user_id = ?", 2, history.UserId).Count(&numberOfSecondsCount)
+	return int(numberOfSecondsCount)
+}
+
+func CountNumberOfThirdCalc(history *models.History) int {
+	var numberOfThirdCount int64
+	database.DB.Model(&history).Where(
+		"rank = ? AND user_id = ?", 3, history.UserId).Count(&numberOfThirdCount)
+	return int(numberOfThirdCount)
+}
+
+func CountNumberOfFourCalc(history *models.History) int {
+	var numberOfFourCount int64
+	database.DB.Model(&history).Where(
+		"rank = ? AND user_id = ?", 4, history.UserId).Count(&numberOfFourCount)
+	return int(numberOfFourCount)
+}
+
+func AverageRankCalc(history *models.History) float64 {
+	var averageRank float64
+	database.DB.Model(&history).Select("avg(rank)").Scan(&averageRank)
+	return averageRank
+}
+
+func TopAverageRankCalc(history *models.History) float64 {
+	var topAverageRank float64
+	topAverageRank = float64(CountNumberOfTopCalc(history)) / float64(MatchCountCalc(history))
+	return topAverageRank * 100.0
+}
+
+func FourthPlaceAvoidanceRateCalc(history *models.History) float64 {
+	var fourthPlaceAvoidanceRate float64
+	fourthPlaceAvoidanceRate = float64(CountNumberOfFourCalc(history)) / float64(MatchCountCalc(history))
+	return 100.0 - fourthPlaceAvoidanceRate*100.0
+}
+
+func MatchCountCalc(history *models.History) int {
+	var matchCount int64
+	database.DB.Model(&history).Where("user_id", history.UserId).Count(&matchCount)
+	return int(matchCount)
+}
+
 func Matches(c *gin.Context) {
 
 	var matches []models.Match
@@ -48,11 +112,27 @@ func CreateMatch(c *gin.Context) {
 		history.CreateHistory(Scores[i], Ranks[i], uint(Ids[i]), match.Id)
 		database.DB.Create(&history)
 
-		//var grade models.Grade
-		//grade.UpdateGrade(&history)
+		var grade models.Grade
+
+		grade = models.Grade{
+			MaxScore:                 MaxScoreCalc(&history),
+			AverageScore:             AverageScoreCalc(&history),
+			NumberOfTop:              CountNumberOfTopCalc(&history),
+			NumberOfSeconds:          CountNumberOfSecondsCalc(&history),
+			NumberOfThird:            CountNumberOfThirdCalc(&history),
+			NumberOfFour:             CountNumberOfFourCalc(&history),
+			AverageRank:              AverageRankCalc(&history),
+			TopAverageRank:           TopAverageRankCalc(&history),
+			FourthPlaceAvoidanceRate: FourthPlaceAvoidanceRateCalc(&history),
+			UserId:                   uint(Ids[i]),
+			MatchCount:               MatchCountCalc(&history),
+		}
+
+		if database.DB.Model(&grade).Where("user_id = ?", history.UserId).Updates(&grade).RowsAffected == 0 {
+			database.DB.Create(&grade)
+		}
 		i++
 	}
-
 	return
 }
 
