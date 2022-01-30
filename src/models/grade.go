@@ -15,18 +15,3 @@ type Grade struct {
 	User                     User    `json:"user" gorm:"foreignKey:UserId"`
 	MatchCount               int     `json:"match_count"`
 }
-
-//func (g *Grade) UpdateGrade(history *History) {
-//	g.MaxScore = history.Score
-//	g.AverageScore = 100
-//	g.NumberOfTop = history.Rank
-//	g.NumberOfSeconds = history.Rank
-//	g.NumberOfThird = history.Rank
-//	g.NumberOfFour = history.Rank
-//	g.AverageRank = 0.1
-//	g.TopAverageRank = 0.1
-//	g.FourthPlaceAvoidanceRate = 0.1
-//	g.MatchCount = 1
-//	database.DB.Create(&g)
-//	return
-//}

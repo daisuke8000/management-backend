@@ -8,7 +8,7 @@ import (
 
 func main() {
 	database.Connect()
-	for i := 0; i < 100; i++ {
+	for i := 0; i < 400; i++ {
 		ambassador := models.User{
 			Name:    faker.Name(),
 			Email:   faker.Email(),
